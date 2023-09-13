@@ -2,11 +2,11 @@ const express = require('express');
 const fs = require('fs').promises;
 const productsRouter = express.Router();
 
-const products = []
+let products = []
 
 productsRouter.get("/api/products", async (req, res) => {
     try {
-        const data = await fs.readFile("products.json", "utf-8");
+        const data = await fs.readFile("products.txt", "utf-8");
         res.send(data)
     } catch (error) {
         res.send({ message: error })
@@ -18,7 +18,7 @@ productsRouter.get("/api/products", async (req, res) => {
 productsRouter.get("/api/products/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
-        const data = await fs.readFile("products.json", "utf-8");
+        const data = await fs.readFile("products.txt", "utf-8");
         const product = await JSON.parse(data).find(ele => ele.id === parseInt(pid));
         res.send(product)
     } catch (error) {
@@ -30,9 +30,21 @@ productsRouter.get("/api/products/:pid", async (req, res) => {
 
 productsRouter.post("/api/products", async (req, res) => {
     try {
-        const { title, description, code, price, stock, category } = req.body;
+        const {
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category } = req.body;
 
-        if (!title || !description || !code || !price || !stock || !category) {
+        if (
+            !title ||
+            !description ||
+            !code ||
+            !price ||
+            !stock ||
+            !category) {
             res.send("Todos los campos son obligatorios")
             return
         }
@@ -53,11 +65,9 @@ productsRouter.post("/api/products", async (req, res) => {
             category
         }
 
-        for(let i of newObj){
-            products.push(i)
-        }
+        products.push(newObj);
 
-        await fs.writeFile("products.json", JSON.stringify(products));
+        await fs.writeFile("products.txt", JSON.stringify(products));
 
         res.send({ message: "producto agregado satisfactoriamente" })
 
@@ -74,8 +84,8 @@ http://localhost:8080/api/products
     "title": "Product Title",
     "description": "Product Description",
     "code": "Product Code",
-    "price": "1000",
-    "stock": "10",
+    "price": 1000,
+    "stock": 10,
     "category": "Product Category"
 }
 */
@@ -85,7 +95,7 @@ productsRouter.put("/api/products/:pid", async (req, res) => {
         const { pid } = req.params;
         const { title, description, code, price, statusProduct, stock, category } = req.body;
 
-        const data = await fs.readFile("products.json", "utf-8");
+        const data = await fs.readFile("products.txt", "utf-8");
 
         if (!title || !description || !code || !price || !statusProduct || !stock || !category) {
             res.send("Todos los campos son obligatorios")
@@ -123,7 +133,10 @@ productsRouter.put("/api/products/:pid", async (req, res) => {
             ele.id === parseInt(pid) ?
                 { id: ele.id, ...UpdObj } : ele);
 
-        await fs.writeFile("products.json", JSON.stringify(newArr));
+        products = [];
+        products.push(...newArr);
+
+        await fs.writeFile("products.txt", JSON.stringify(products));
 
         res.send({ message: "producto modificado" })
     } catch (error) {
@@ -150,7 +163,7 @@ productsRouter.delete("/api/products/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
 
-        const data = await fs.readFile("products.json", "utf-8");
+        const data = await fs.readFile("products.txt", "utf-8");
 
         const index = JSON.parse(data).findIndex(ele =>
             ele.id === parseInt(pid));
@@ -162,7 +175,7 @@ productsRouter.delete("/api/products/:pid", async (req, res) => {
 
         products.splice(index, 1);
 
-        await fs.writeFile('products.json', JSON.stringify(products))
+        await fs.writeFile('products.txt', JSON.stringify(products))
 
         res.send({ message: "producto eliminado" })
     } catch (error) {
