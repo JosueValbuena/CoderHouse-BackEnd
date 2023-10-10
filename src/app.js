@@ -1,16 +1,24 @@
-const express = require('express');
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import router from "./routes/index.routes.js";
+dotenv.config();
+
+const port = 3001;
+
 const app = express();
-const port = process.env.PORT || 3001;
-const prodctsRouter = require('./routes/products');
-const cartRouter = require('./routes/carts');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/', prodctsRouter)
-app.use('/', cartRouter);
+app.use('/', express.json());
+app.use('/', express.urlencoded({extended: true}))
+app.use('/', router);
 
-app.get('/', (req, res) => {
-    res.send('Hola desde Express')
+const mongoEnviroment = async () => {
+    await mongoose.connect(process.env.DB_SECRET_KEY);
+    console.log('Conectado con mongoose')
+}
+
+mongoEnviroment();
+
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`)
 })
-
-app.listen(port, () => console.log(`Server TURNED ON in the port ${port}`))
