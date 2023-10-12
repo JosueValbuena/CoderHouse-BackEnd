@@ -5,7 +5,7 @@ const productsRoutes = Router();
 
 productsRoutes.get('/', async (req, res) => {
     try {
-        
+
         const { limit, page, sort, category } = req.query;
         const limitNumber = parseInt(limit) || 10;
         const pageNumber = parseInt(page) || 1;
@@ -53,15 +53,6 @@ productsRoutes.post('/', async (req, res) => {
         if (!title || !description || !code || !price || !stock || !category) {
             res.send('Todos los campos son obligatorios');
             return
-        }
-
-        const product = {
-            title,
-            description,
-            code,
-            price,
-            stock,
-            category
         }
 
         const result = await productsModel.create({ title, description, code, price, stock, category });
