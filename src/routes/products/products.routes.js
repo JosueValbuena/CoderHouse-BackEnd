@@ -34,9 +34,21 @@ productsRoutes.get('/', async (req, res) => {
 
         const result = await productsModel.paginate(filtro, options)
 
+        const baseURL = 'http://localhost:3001/api/products';
+        let URLparams = '?';
+
+        if(sort){
+            URLparams += '&sort='+sort
+        }
+        if(category){
+            URLparams += '&category='+category
+        }
+
         res.send({
             status: 'success',
-            payload: result
+            payload: result,
+            prevLink: result.hasPrevPage ? baseURL+URLparams+`&limit=${result.limit}`+`&page=${result.prevPage}` : 'No tiene pagina previa',
+            nextLinkPage: result.hasNextPage ? baseURL+URLparams+`&limit=${result.limit}`+`&page=${result.nextPage}` : 'No tiene pagina siguiente'
         });
     } catch (error) {
         res.status(500).send({
