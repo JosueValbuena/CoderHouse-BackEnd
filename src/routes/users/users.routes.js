@@ -38,7 +38,7 @@ usersRoutes.post('/register', async (req, res) => {
 usersRoutes.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-
+        
         const user = await usersModel.findOne({ email: email });
 
         if (!user) return res.status(401).send({ status: 'Error', message: 'Error al verificar usuario' });
