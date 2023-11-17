@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import router from "./routes/index.routes.js";
 import cors from 'cors';
+import passport from "passport";
 
 dotenv.config();
 
@@ -15,8 +16,10 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors({
     origin: 'http://localhost:3000',
     methods: 'GET, POST, PUT, DELETE',
-    allowedHeaders: 'Content-Type, Authorization'
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true
 }));
+app.use(passport.initialize());
 
 const mongoEnviroment = async () => {
     await mongoose.connect(process.env.DB_SECRET_KEY);

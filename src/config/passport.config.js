@@ -18,10 +18,14 @@ const jwtOptions = {
     secretOrKey: process.env.JWT_SECRET_KEY
 };
 
-passport.use(new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
-    const user = await usersModel.findOne({ email: jwt_payload.email });
+passport.use('current', new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
+    try {
+        const user = await usersModel.findOne({ email: jwt_payload.email });
 
-    if (!user) return done(null, false, { message: 'usuario no encontrado' });
+        if (!user) return done(null, false, { message: 'usuario no encontrado' });
 
-    return done(null, user);
+        return done(null, user);
+    } catch (error) {
+        return done(error, false, { message: 'Error al buscar el usuario' })
+    };
 }));
