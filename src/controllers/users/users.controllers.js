@@ -1,10 +1,11 @@
 import User from "../../dao/users/users.dao.js";
 import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
+import { usersService } from "../../repository/repositoy.index.js";
+import CurrentUser from "../../DTOs/users/users.dto.js";
 
 dotenv.config();
 
-const usersService = new User();
 
 export const getAllUsers = async (req, res) => {
     try {
@@ -51,6 +52,16 @@ export const getUserByID = async (req, res) => {
         const result = await usersService.getUserByID(id);
         if (result.status === 'Error') return res.json({ status: 'Error', message: result.message });
         res.status(200).json({ status: 'Success', result });
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
+    };
+}
+
+export const getCurrentUser = async (req, res) => {
+    try {
+        const user = req.user;
+        let result = new CurrentUser(user);
+        res.status(200).json(result);
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }

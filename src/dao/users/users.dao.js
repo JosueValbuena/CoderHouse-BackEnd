@@ -59,4 +59,14 @@ export default class User {
             throw new Error('Error en la autenticacion');
         }
     };
+
+    getCurrentUser = async (email) => {
+        try {
+            const user = await usersModel.findOne(email);
+            return user;
+        } catch (error) {
+            console.error('Error en la autenticacion', error);
+            throw new Error('Error en la autenticacion');
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { getAllUsers, getUserByID, loginUser, registerUser } from "../../controllers/users/users.controllers.js";
+import { getAllUsers, getCurrentUser, getUserByID, loginUser, registerUser } from "../../controllers/users/users.controllers.js";
 
 
 const usersRoutes = Router();
@@ -13,14 +13,6 @@ usersRoutes.post('/register', registerUser)
 
 usersRoutes.post('/login', loginUser);
 
-usersRoutes.get('/profile', passport.authenticate('current', { session: false }), async (req, res) => {
-    try {
-        const user = req.user.toObject();
-        delete user.password;
-        res.json({ user });
-    } catch (error) {
-        res.status(500).send({ status: 'Error', message: 'Error al optener datos de usuario', error })
-    }
-});
+usersRoutes.get('/profile', passport.authenticate('current', { session: false }), getCurrentUser);
 
 export default usersRoutes;

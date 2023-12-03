@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { ExtractJwt, Strategy as JWTStrategy, Strategy } from 'passport-jwt';
 import dotenv from 'dotenv';
-import usersModel from '../models/user/user.model.js';
+import { usersService } from '../repository/repositoy.index.js';
 dotenv.config();
 
 //encriptar contrasenha
@@ -20,7 +20,7 @@ const jwtOptions = {
 
 passport.use('current', new JWTStrategy(jwtOptions, async (jwt_payload, done) => {
     try {
-        const user = await usersModel.findOne({ email: jwt_payload.email });
+        const user = await usersService.getCurrentUser({ email: jwt_payload.email });
 
         if (!user) return done(null, false, { message: 'usuario no encontrado' });
 
