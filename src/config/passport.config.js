@@ -23,7 +23,7 @@ passport.use('current', new JWTStrategy(jwtOptions, async (jwt_payload, done) =>
         const user = await usersService.getCurrentUser({ email: jwt_payload.email });
 
         if (!user) return done(null, false, { message: 'usuario no encontrado' });
-
+        console.log(user)
         return done(null, user);
     } catch (error) {
         return done(error, false, { message: 'Error al buscar el usuario' })

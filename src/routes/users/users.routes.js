@@ -1,11 +1,12 @@
 import { Router } from "express";
 import passport from "passport";
 import { getAllUsers, getCurrentUser, getUserByID, loginUser, registerUser } from "../../controllers/users/users.controllers.js";
+import { accesPrivacyMiddleware } from "../../middlewares/index.middlewares.js";
 
 
 const usersRoutes = Router();
 
-usersRoutes.get('/allusers', getAllUsers);
+usersRoutes.get('/allusers', accesPrivacyMiddleware('admin'), getAllUsers);
 
 usersRoutes.get('/user/:id', getUserByID);
 
