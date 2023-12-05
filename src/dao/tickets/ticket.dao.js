@@ -1,4 +1,5 @@
 import cartsModels from "../../models/carts/carts.models.js";
+import productsModel from "../../models/products/products.models.js";
 import ticketModels from "../../models/ticket/ticket.model.js";
 
 export default class Ticket {
@@ -16,15 +17,15 @@ export default class Ticket {
     createTicket = async (uid, cid) => {
         try {
             const cart = await cartsModels.find({ _id: cid });
-            console.log(cart)
 
             const products = [];
 
             cart.forEach((ele) => {
                 for (const producto of ele.products) {
-                    products.push(producto)
+                    if (!producto.product.stock >= producto.qty) return { status: 'Error', message: 'No hay stock suficiente' };
+                    products.push(producto);
                 };
-            })
+            });
 
             const newTicket = {
                 user: uid,
@@ -32,7 +33,7 @@ export default class Ticket {
                 products: products
             };
 
-            console.log(newTicket);
+            console.log({ newTicket });
 
             let result = await ticketModels.create(newTicket);
             return result;
