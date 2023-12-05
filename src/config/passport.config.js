@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { ExtractJwt, Strategy as JWTStrategy, Strategy } from 'passport-jwt';
 import dotenv from 'dotenv';
-import { usersService } from '../repository/repositoy.index.js';
+import { usersService } from '../repository/index.repository.js';
 dotenv.config();
 
 //encriptar contrasenha

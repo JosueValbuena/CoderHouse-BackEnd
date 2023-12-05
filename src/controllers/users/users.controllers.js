@@ -1,7 +1,7 @@
 import User from "../../dao/users/users.dao.js";
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import { usersService } from "../../repository/repositoy.index.js";
+import { usersService } from "../../repository/index.repository.js";
 import CurrentUser from "../../DTOs/users/users.dto.js";
 
 dotenv.config();

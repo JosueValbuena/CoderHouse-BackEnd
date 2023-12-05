@@ -1,4 +1,4 @@
-import { productsService } from "../../repository/repositoy.index.js";
+import { productsService } from "../../repository/index.repository.js";
 
 export const getAllProducts = async (req, res) => {
     try {

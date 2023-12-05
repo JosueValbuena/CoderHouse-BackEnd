@@ -21,6 +21,22 @@ cartsRoutes.get('/', async (req, res) => {
     }
 })
 
+cartsRoutes.get('/:cid', async (req, res) => {
+    try {
+        const { cid } = req.params;
+        const result = await cartsModels.find({ _id: cid });
+        res.send({
+            status: 'success',
+            payload: result
+        })
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            message: 'Error en la busqueda'
+        })
+    }
+})
+
 cartsRoutes.post('/', async (req, res) => {
     try {
         const { pid, uid } = req.body;
@@ -89,12 +105,12 @@ cartsRoutes.put('/:cid', async (req, res) => {
 
 cartsRoutes.put('/:cid/products/:pid', async (req, res) => {
     try {
-        const {cid, pid} = req.params;
-        const {qty} = req.body;
-        
-        const cart = await cartsModels.findOne({_id: cid});
+        const { cid, pid } = req.params;
+        const { qty } = req.body;
 
-        if(!cart){
+        const cart = await cartsModels.findOne({ _id: cid });
+
+        if (!cart) {
             res.send('ID no existe');
             return
         }
@@ -103,7 +119,7 @@ cartsRoutes.put('/:cid/products/:pid', async (req, res) => {
 
         cart.products[index].qty = qty;
 
-        const result = await cartsModels.updateOne({_id: cid}, cart);
+        const result = await cartsModels.updateOne({ _id: cid }, cart);
 
         res.send({
             status: 'success',
@@ -137,10 +153,10 @@ cartsRoutes.delete('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
 
-        const cart = await cartsModels.findOne({_id: cid});
+        const cart = await cartsModels.findOne({ _id: cid });
         const index = cart.products.findIndex(ele => ele.product == pid);
         cart.products.splice(index, 1);
-        const result = await cartsModels.updateOne({_id: cid}, cart)
+        const result = await cartsModels.updateOne({ _id: cid }, cart)
         res.send({
             status: 'success',
             payload: result
