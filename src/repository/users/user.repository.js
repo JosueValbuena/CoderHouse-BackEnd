@@ -18,7 +18,7 @@ export default class UsersRepository {
         return result;
     };
 
-    getUserByID = async (id) => {
+    getUserByID = async (id, req) => {
         let result = await this.dao.getUserByID(id);
         return result
     };

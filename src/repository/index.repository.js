@@ -4,7 +4,9 @@ import UsersRepository from "./users/user.repository.js";
 import ProductsRepository from "./products/products.repository.js";
 import TicketRepository from "./tickets/tickets.repository.js";
 import Ticket from "../dao/tickets/ticket.dao.js";
+import { logger } from "../utils/index.logger.js";
 
-export const usersService = new UsersRepository(new User());
+
+export const usersService = new UsersRepository(new User(logger));
 export const productsService = new ProductsRepository(new Product());
 export const ticketService = new TicketRepository(new Ticket());

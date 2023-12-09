@@ -1,4 +1,5 @@
 import passport from "passport";
+import { logger } from "../utils/index.logger.js";
 
 export const accesPrivacyMiddleware = (requiredRole) => {
     return (req, res, next) => {
@@ -9,12 +10,17 @@ export const accesPrivacyMiddleware = (requiredRole) => {
             if (!user) return res.status(401).json({ status: 'Error', message: 'Acceso no autorizado' });
 
             if (user.role === requiredRole) {
-                console.log('Acceso permitido');
+                req.logger.info('Acceso permitido');
                 next()
             } else {
-                console.log('No tienes permisos para acceder a este contenido');
+                req.logger.error('No tienes permisos para acceder a este contenido');
                 return res.status(403).json({ status: 'Error', message: 'Acceso denegado' });
             };
         })(req, res, next);
     };
+};
+
+export const loggerMiddleware = (req, res, next) => {
+    req.logger = logger;
+    next();
 };

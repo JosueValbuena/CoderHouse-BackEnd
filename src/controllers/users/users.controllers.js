@@ -1,4 +1,3 @@
-import User from "../../dao/users/users.dao.js";
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { usersService } from "../../repository/index.repository.js";
@@ -9,7 +8,7 @@ dotenv.config();
 
 export const getAllUsers = async (req, res) => {
     try {
-        const result = await usersService.getAllUsers();
+        const result = await usersService.getAllUsers(req);
         res.status(201).json({ status: 'Success', result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
@@ -19,7 +18,7 @@ export const getAllUsers = async (req, res) => {
 export const registerUser = async (req, res) => {
     try {
         const { first_name, last_name, email, age, password, role } = req.body;
-        const result = await usersService.registerUser(first_name, last_name, email, age, password, role);
+        const result = await usersService.registerUser(first_name, last_name, email, age, password, role, req);
 
         if (result.status === 'Error') return res.status(500).json({ status: 'Error', message: result.message });
 
@@ -32,7 +31,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const result = await usersService.loginUser(email, password);
+        const result = await usersService.loginUser(email, password, req);
 
         if (result.status === 'Error') return res.status(401).json({ status: 'Error', message: result.message });
 
@@ -49,7 +48,7 @@ export const loginUser = async (req, res) => {
 export const getUserByID = async (req, res) => {
     try {
         const { id } = req.params;
-        const result = await usersService.getUserByID(id);
+        const result = await usersService.getUserByID(id, req);
         if (result.status === 'Error') return res.json({ status: 'Error', message: result.message });
         res.status(200).json({ status: 'Success', result });
     } catch (error) {

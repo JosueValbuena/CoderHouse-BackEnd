@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import router from "./routes/index.routes.js";
 import cors from 'cors';
 import passport from "passport";
+import { loggerMiddleware } from "./middlewares/index.middlewares.js";
+import { logger } from "./utils/index.logger.js";
 
 dotenv.config();
 
@@ -24,19 +26,20 @@ app.use(passport.initialize());
 const mongoEnviroment = async () => {
     try {
         await mongoose.connect(process.env.DB_SECRET_KEY);
-        console.log('Conectado con mongoose');
+        logger.info('Conectado con mongoose');
     } catch (error) {
-        console.error('Error al conectar con mogoose: ', error.mesage);
+        logger.error('Error al conectar con mogoose: ', error.mesage);
     }
 };
 
 mongoEnviroment();
 
+app.use(loggerMiddleware);
 app.use('/', router);
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Not Found' });
 });
 
 app.listen(port, () => {
-    console.log(`Server started on port ${port}`)
+    logger.info(`Server started on port ${port}`)
 })
