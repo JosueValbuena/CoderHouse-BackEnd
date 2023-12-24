@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { getAllUsers, getCurrentUser, getUserByID, loginUser, passwordForgot, passwordRecovery, passwordRecoveryToken, registerUser } from "../../controllers/users/users.controllers.js";
+import { getAllUsers, getCurrentUser, getUserByID, loginUser, passwordForgot, passwordRecovery, passwordRecoveryToken, registerUser, userRolePremium } from "../../controllers/users/users.controllers.js";
 import { accesPrivacyMiddleware } from "../../middlewares/index.middlewares.js";
 
 
@@ -21,5 +21,7 @@ usersRoutes.post('/password-forgot', passwordForgot);
 usersRoutes.get('/password-recovery/:token', passwordRecoveryToken);
 
 usersRoutes.put('/password-recovery', passwordRecovery);
+
+usersRoutes.put('/user-role/:uid', userRolePremium);
 
 export default usersRoutes;

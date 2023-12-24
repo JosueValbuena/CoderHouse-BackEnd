@@ -71,7 +71,7 @@ export default class User {
             const user = await usersModel.findOne(email);
             return user;
         } catch (error) {
-            console.error('Error en la autenticacion', error);
+            this.logger.error('Error en la autenticacion', error);
             throw new Error('Error en la autenticacion');
         }
     };
@@ -81,20 +81,28 @@ export default class User {
             const result = await usersModel.findOne({ email });
             return result;
         } catch (error) {
-            console.error('Error al consultar email', error);
+            this.logger.error('Error al consultar email', error);
             throw new Error('Error al consultar email');
         }
     };
 
     passwordRecovery = async (email, newPassword) => {
         try {
-            console.log({ newPassword })
             const result = await usersModel.updateOne({ email }, { $set: { password: newPassword } });
-            console.log(result)
             return result;
         } catch (error) {
-            console.error('Error al cambiar contraseña', error);
+            this.logger.error('Error al cambiar contraseña', error);
             throw new Error('Error al cambiar contraseña');
+        }
+    };
+
+    userRolePremium = async (uid, role) => {
+        try {
+            const result = await usersModel.updateOne({ _id: uid }, { $set: { role } });
+            return result;
+        } catch (error) {
+            this.logger.error('Error al cambiar el rol a premium', error);
+            throw new Error('Error al cambiar el rol a premium');
         }
     };
 };

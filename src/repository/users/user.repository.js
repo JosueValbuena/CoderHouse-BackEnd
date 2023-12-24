@@ -37,4 +37,9 @@ export default class UsersRepository {
         let result = await this.dao.passwordRecovery(email, newPassword);
         return result;
     };
+
+    userRolePremium = async (uid, role) => {
+        let result = await this.dao.userRolePremium(uid, role);
+        return result;
+    };
 };

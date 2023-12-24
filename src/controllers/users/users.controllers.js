@@ -41,7 +41,7 @@ export const loginUser = async (req, res) => {
 
         if (!token) return res.json({ status: 'Error', message: 'Error al firmar el token' });
 
-        res.json({ token, name: result.first_name });
+        res.json({ token, name: result.first_name, role: result.role, id: result._id });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
@@ -56,7 +56,7 @@ export const getUserByID = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     };
-}
+};
 
 export const getCurrentUser = async (req, res) => {
     try {
@@ -66,7 +66,7 @@ export const getCurrentUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
-}
+};
 
 export const passwordForgot = async (req, res) => {
     try {
@@ -102,7 +102,7 @@ export const passwordForgot = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
-}
+};
 
 export const passwordRecoveryToken = async (req, res) => {
     try {
@@ -118,7 +118,7 @@ export const passwordRecoveryToken = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
     }
-}
+};
 
 export const passwordRecovery = async (req, res) => {
     try {
@@ -146,4 +146,16 @@ export const passwordRecovery = async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
     }
-}
+};
+
+export const userRolePremium = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { role } = req.body;
+        if (!uid || !role) return res.status(400).json({ status: 'Error', message: 'Datos incompletos' });
+        const result = await usersService.userRolePremium(uid, role);
+        res.status(200).json({ status: 'Success', message: 'Rol de usuario cambiado con exito', result });
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
+    }
+};
