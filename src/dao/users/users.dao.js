@@ -75,4 +75,26 @@ export default class User {
             throw new Error('Error en la autenticacion');
         }
     };
+
+    verifyEmail = async (email) => {
+        try {
+            const result = await usersModel.findOne({ email });
+            return result;
+        } catch (error) {
+            console.error('Error al consultar email', error);
+            throw new Error('Error al consultar email');
+        }
+    };
+
+    passwordRecovery = async (email, newPassword) => {
+        try {
+            console.log({ newPassword })
+            const result = await usersModel.updateOne({ email }, { $set: { password: newPassword } });
+            console.log(result)
+            return result;
+        } catch (error) {
+            console.error('Error al cambiar contraseña', error);
+            throw new Error('Error al cambiar contraseña');
+        }
+    };
 };

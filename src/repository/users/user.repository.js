@@ -18,13 +18,23 @@ export default class UsersRepository {
         return result;
     };
 
-    getUserByID = async (id, req) => {
+    getUserByID = async (id) => {
         let result = await this.dao.getUserByID(id);
         return result
     };
 
     getCurrentUser = async (email) => {
         let result = await this.dao.getCurrentUser(email);
+        return result;
+    };
+
+    verifyEmail = async (email) => {
+        let result = await this.dao.verifyEmail(email);
+        return result;
+    };
+
+    passwordRecovery = async (email, newPassword) => {
+        let result = await this.dao.passwordRecovery(email, newPassword);
         return result;
     };
 };
