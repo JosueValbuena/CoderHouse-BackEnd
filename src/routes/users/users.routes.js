@@ -22,6 +22,6 @@ usersRoutes.get('/password-recovery/:token', passwordRecoveryToken);
 
 usersRoutes.put('/password-recovery', passwordRecovery);
 
-usersRoutes.put('/user-role/:uid', userRolePremium);
+usersRoutes.put('/user-role/premium/:uid', userRolePremium);
 
 export default usersRoutes;
