@@ -56,13 +56,13 @@ export const getAllProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { title, description, code, price, stock, category } = req.body;
+        const { title, description, code, price, stock, category, user } = req.body;
 
-        if (!title || !description || !code || !price || !stock || !category) {
+        if (!title || !description || !code || !price || !stock || !category || !user) {
             return res.status(400).json({ status: 'Error', message: 'Todos los campos son obligatorios' });
         }
 
-        const result = await productsService.createProduct(title, description, code, price, stock, category);
+        const result = await productsService.createProduct(title, description, code, price, stock, category, user);
 
         if (result.status === 'Error') return res.status(401).json({ status: 'error', message: 'Error al agregar producto' })
 
@@ -81,7 +81,7 @@ export const getProductByID = async (req, res) => {
     try {
         const { pid } = req.params;
         const result = await productsService.getProductByID(pid);
-        if (result.status === 'Error') return res.status(401).json({ status: 'Error', message: result.message });
+        if (result.status === 'Error') return res.status(result.code).json({ status: result.status, message: result.message });
         res.status(200).json({ status: 'Success', result });
     } catch (error) {
         res.status(500).json({
@@ -90,4 +90,22 @@ export const getProductByID = async (req, res) => {
             error: error.message
         })
     }
+};
+
+export const deleteProduct = async (req, res) => {
+    try {
+        const { pid } = req.params;
+        const { uid } = req.body;
+        if (!pid || !uid) return res.status(400).json({ status: 'Error', message: 'ID del usuario y producto requerido' });
+        const result = await productsService.deleteProduct(pid, uid);
+        if (result && result.status && result.code) return res.status(result.code).json({ status: result.status, message: result.message });
+        res.status(200).json({ status: 'Success', message: 'Producto eliminado con exito' });
+    } catch (error) {
+        req.logger.error(error);
+        res.status(500).json({
+            status: 'Error',
+            message: 'En el servidor al eliminar producto',
+            error: error.message
+        })
+    };
 };

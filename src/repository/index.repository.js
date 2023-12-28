@@ -8,5 +8,5 @@ import { logger } from "../utils/index.logger.js";
 
 
 export const usersService = new UsersRepository(new User(logger));
-export const productsService = new ProductsRepository(new Product());
+export const productsService = new ProductsRepository(new Product(logger));
 export const ticketService = new TicketRepository(new Ticket());
