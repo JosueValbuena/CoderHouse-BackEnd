@@ -6,6 +6,8 @@ import cors from 'cors';
 import passport from "passport";
 import { loggerMiddleware } from "./middlewares/index.middlewares.js";
 import { logger } from "./utils/index.logger.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUIExpress from 'swagger-ui-express';
 
 dotenv.config();
 
@@ -13,16 +15,7 @@ const port = process.env.PORT || 3001;
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use(cors({
-    origin: [process.env.ORIGIN_ONLINE, process.env.ORIGIN_OFFLINE],
-    methods: 'GET, POST, PUT, DELETE',
-    allowedHeaders: 'Content-Type, Authorization',
-    credentials: true
-}));
-app.use(passport.initialize());
-
+//mongo
 const mongoEnviroment = async () => {
     try {
         await mongoose.connect(process.env.DB_SECRET_KEY);
@@ -34,8 +27,41 @@ const mongoEnviroment = async () => {
 
 mongoEnviroment();
 
+//swagger
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion Proyecto Backend',
+            description: 'Documentacion para el proyecto final de backend para coderhouse, por Josue Valbuena'
+        },
+    },
+    apis: ['src/docs/users.yaml']
+};
+
+let swaggerSpecs;
+
+try {
+    swaggerSpecs = swaggerJSDoc(swaggerOptions);
+    logger.info('Especificaciones Swagger generadas correctamente');
+} catch (error) {
+    logger.error('Error al generar las especificaciones Swagger: ', error);
+};
+
+//middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+    origin: [process.env.ORIGIN_ONLINE, process.env.ORIGIN_OFFLINE],
+    methods: 'GET, POST, PUT, DELETE',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true
+}));
+app.use(passport.initialize());
+
 app.use(loggerMiddleware);
 app.use('/', router);
+app.use('/api/docs', swaggerUIExpress.serve, swaggerUIExpress.setup(swaggerSpecs));
 app.use((req, res, next) => {
     res.status(404).json({ error: 'Not Found' });
 });
