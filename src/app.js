@@ -36,7 +36,7 @@ const swaggerOptions = {
             description: 'Documentacion para el proyecto final de backend para coderhouse, por Josue Valbuena'
         },
     },
-    apis: ['src/docs/users.yaml']
+    apis: ['src/docs/users/users.yaml']
 };
 
 let swaggerSpecs;
