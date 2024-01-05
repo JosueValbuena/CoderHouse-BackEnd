@@ -5,18 +5,36 @@ paths:
       responses:
         "200":
           description: "Datos obtenidos satistactoriamente"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/User"
         "500":
           description: "Error interno del servidor"
 
   /api/users/user/{id}:
     get:
       summary: Obtiene un usuario por ID especificado
+      parameters:
+        - name: id
+          in: path
+          require: true
+          description: id del usuario solicitado
+          schema:
+          $type: String
       responses:
         "200":
           description: "Usuario obtenido satisfactoriamente"
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#components/schemas/User"
         "500":
           description: "Error interno en el servidor"
-  
+
   /api/users/register:
     post:
       summary: Crea un usuario
@@ -27,3 +45,38 @@ paths:
           description: "Usuario creado exitosamente"
         "500":
           description: "Error interno en el servidor"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID generado por mongo
+        first_name:
+          type: String
+          description: Nombre del usuario
+        last_name:
+          type: String
+          description: Apellido del usuario
+        email:
+          type: String
+          description: Correo electronico del usuario
+        age:
+          type: int
+          description: Edad del usuario
+        password:
+          type: String
+          description: Contraseña del usuario
+        role:
+          type: String
+          description: Rol del usuario
+      example: 
+        _id: ObjectId("ObjectIdExample123")
+        first_name: User_FName
+        last_name: User_Lname
+        email: User_Email
+        age: User_Age
+        password: User_Password
+        role: User_Role
