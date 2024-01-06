@@ -21,7 +21,7 @@ cartsRoutes.get('/', async (req, res) => {
     }
 })
 
-cartsRoutes.get('/:cid', async (req, res) => {
+cartsRoutes.get('/user/:uid/cart/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
         const result = await cartsModels.find({ _id: cid });
@@ -37,9 +37,9 @@ cartsRoutes.get('/:cid', async (req, res) => {
     }
 })
 
-cartsRoutes.post('/', async (req, res) => {
+cartsRoutes.post('addToCart/user/:uid/product/:pid', async (req, res) => {
     try {
-        const { pid, uid } = req.body;
+        const { pid, uid } = req.params;
 
         let cart = await cartsModels.findOne({ user: uid });
 
@@ -133,7 +133,7 @@ cartsRoutes.put('/:cid/products/:pid', async (req, res) => {
     }
 })
 
-cartsRoutes.delete('/:cid', async (req, res) => {
+cartsRoutes.delete('/delete/user/:uid/cart/:cid', async (req, res) => {
     try {
         const { cid } = req.params;
         const result = await cartsModels.deleteOne({ _id: cid });
@@ -149,7 +149,7 @@ cartsRoutes.delete('/:cid', async (req, res) => {
     }
 })
 
-cartsRoutes.delete('/:cid/products/:pid', async (req, res) => {
+cartsRoutes.delete('/delete/user/:uid/cart/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params;
 

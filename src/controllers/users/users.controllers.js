@@ -4,6 +4,7 @@ import { usersService } from "../../repository/index.repository.js";
 import CurrentUser from "../../DTOs/users/users.dto.js";
 import nodeMailer from 'nodemailer';
 import { createhash, isValidPassword } from '../../config/passport.config.js';
+import { isValidObjectId } from 'mongoose';
 
 dotenv.config();
 
@@ -41,7 +42,7 @@ export const loginUser = async (req, res) => {
 
         if (!token) return res.json({ status: 'Error', message: 'Error al firmar el token' });
 
-        res.json({ token, name: result.first_name, role: result.role, id: result._id });
+        res.status(200).json({ token, name: result.first_name, role: result.role, id: result._id });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
@@ -50,6 +51,8 @@ export const loginUser = async (req, res) => {
 export const getUserByID = async (req, res) => {
     try {
         const { id } = req.params;
+        const validId = isValidObjectId(id);
+        if (!validId) return res.status(400).json({ status: 'Error', message: 'El ID no es un tipo de dato valido' });
         const result = await usersService.getUserByID(id);
         if (result.status === 'Error') return res.json({ status: 'Error', message: result.message });
         res.status(200).json({ status: 'Success', result });

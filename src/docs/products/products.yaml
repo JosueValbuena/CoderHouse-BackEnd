@@ -1,0 +1,122 @@
+components:
+  schemas:
+    Products:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID autogenerado por mongo
+        title:
+          type: String
+          description: Titulo del producto
+        description:
+          type: String
+          description: Descripcion del producto
+        code:
+          type: String
+          description: Codigo asignado al producto
+        price:
+          type: Number
+          description: Precio del producto
+        stock:
+          type: Integer
+          description: Cantidad existente del producto
+        category:
+          type: String
+          description: Categoria del producto
+        user:
+          type: ObjectId
+          description: ID del usuario a quien pertenece el producto
+      required:
+        - _id
+        - title
+        - description
+        - code
+        - price
+        - stock
+        - category
+        - user
+      example:
+        _id: ObjectId("5f8a18a6716f8b41b43c022b")
+        title: Mouse Logitech G Pro
+        description: Mouse Gamer Logitech 16.000DPI
+        code: MLOGI12345
+        price: 59.990CLP
+        stock: 56
+        category: mouse
+        user: ObjectId("5f8a18a6716f8b41b43c022b")
+
+paths:
+  /api/products/all:
+    get:
+      summary: Muestra todos los productos registrados
+      tags: [Products]
+      responses:
+        200:
+          description: usuarios devueltos con exito
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Products'
+  
+  /api/products/{pid}:
+    get:
+      summary: Muestra un producto por ID especificado
+      tags: [Products]
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto solicitado
+          schema:
+            type: String
+      responses:
+        "200":
+          description: "Producto obtenido satisfactoriamente"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#components/schemas/Products"
+        "400":
+          description: "Error en algun dato enviado a la consulta"
+        "500":
+          description: "Error interno en el servidor"
+  
+  /api/products/create:
+    post:
+      summary: Crea un producto
+      tags: [Products]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/Products'
+      responses:
+        "201":
+          description: "producto creado exitosamente"
+        "500":
+          description: "Error interno en el servidor"
+
+  /api/products/delete/{pid}:
+    delete:
+      summary: Elimina un producto por ID especificado
+      tags: [Products]
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del producto solicitado
+          schema:
+            type: String
+      responses:
+        "200":
+          description: "Producto Eliminado satisfactoriamente"
+        "400":
+          description: "Error en algun dato enviado a la consulta"
+        "500":
+          description: "Error interno en el servidor"

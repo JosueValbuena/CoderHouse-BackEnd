@@ -1,0 +1,128 @@
+components:
+  schemas:
+    Carts:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: ID autogenerado por mongo
+        products:
+          type: Array
+          description: producto y cantidad de producto en el carrito
+        user:
+          type: ObjectId
+          description: ID del usuario a quien pertenece el carrito
+      required:
+        - products
+        - user
+      example:
+        _id: ObjectId("5f8a18a6716f8b41b43c022b")
+        products:
+          - product: ObjectId("5f8a18a6716f8b41b43c022b"),
+            qty: 3,
+            _id: ObjectId("5f8a18a6716f8b41b43c022b")
+        user: ObjectId("5f8a18a6716f8b41b43c022b")
+
+paths:
+  /api/carts/user/{uid}/cart/{cid}:
+    get:
+      summary: Obtener el carrito del usuario especificado por ID
+      tags: [Carts]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario asociado al carrito
+          schema:
+            type: String
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: String
+      responses:
+        200:
+          description: Carrito del usuario obtenido correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#components/schemas/Carts'
+        500:
+          description: Error en el servidor
+  
+  /api/carts/addtocart/user/{uid}/product/{pid}:
+    post:
+      summary: Agregar producto al carrito
+      tags: [Carts]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario asociado al carrito
+          schema:
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto a agregar al carrito
+          schema:
+            type: string
+      responses:
+        201:
+          description: Producto agregado con exito
+        500:
+          description: Error en el servidor
+
+  /api/carts/delete/user/{uid}/cart/{cid}:
+    delete:
+      summary: Obtener el carrito del usuario especificado por ID
+      tags: [Carts]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario asociado al carrito
+          schema:
+            type: String
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: String
+      responses:
+        200:
+          description: Carrito eliminado con exito
+        500:
+          description: Error en el servidor
+
+  /api/carts/delete/user/{uid}/cart/{cid}/products/{pid}:
+    delete:
+      summary: Elimina el item del carrito de un usuario
+      tags: [Carts]
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: String
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito
+          schema:
+            type: String
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto a eliminar
+          schema:
+            type: String
+      responses:
+        200:
+          description: Producto eliminado del carrito con exito
+        500:
+          description: Error en el servidor

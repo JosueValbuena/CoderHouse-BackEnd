@@ -9,10 +9,10 @@ import { logger } from "./utils/index.logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from 'swagger-ui-express';
 
+//configs
+
 dotenv.config();
-
 const port = process.env.PORT || 3001;
-
 const app = express();
 
 //mongo
@@ -21,7 +21,7 @@ const mongoEnviroment = async () => {
         await mongoose.connect(process.env.DB_SECRET_KEY);
         logger.info('Conectado con mongoose');
     } catch (error) {
-        logger.error('Error al conectar con mogoose: ', error.mesage);
+        logger.error('Error al conectar con mogoose: ', error.message);
     }
 };
 
@@ -33,10 +33,11 @@ const swaggerOptions = {
         openapi: '3.0.1',
         info: {
             title: 'Documentacion Proyecto Backend',
-            description: 'Documentacion para el proyecto final de backend para coderhouse, por Josue Valbuena'
+            description: 'Documentacion para el proyecto final de backend para coderhouse, por Josue Valbuena',
+            version: '1.0.0'
         },
     },
-    apis: ['src/docs/users/users.yaml']
+    apis: ['./src/docs/users/users.yaml', './src/docs/products/products.yaml', './src/docs/carts/carts.yaml']
 };
 
 let swaggerSpecs;
