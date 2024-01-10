@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/app.js"
+    "start": "nodemon src/app.js",
+    "test:user": "mocha test/users/users.test.js",
+    "test:products": "mocha test/products/products.test.js",
+    "test:cart": "mocha test/cart/cart.test.js"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +30,9 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
   }
 }
