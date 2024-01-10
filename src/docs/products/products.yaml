@@ -49,7 +49,7 @@ components:
 paths:
   /api/products/all:
     get:
-      summary: Muestra todos los productos registrados
+      summary: Obtener todos los productos registrados
       tags: [Products]
       responses:
         200:
@@ -63,7 +63,7 @@ paths:
   
   /api/products/{pid}:
     get:
-      summary: Muestra un producto por ID especificado
+      summary: Obtener un producto por ID especificado
       tags: [Products]
       parameters:
         - name: pid

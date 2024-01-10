@@ -77,7 +77,7 @@ paths:
 
   /api/carts/delete/user/{uid}/cart/{cid}:
     delete:
-      summary: Obtener el carrito del usuario especificado por ID
+      summary: Eliminar el carrito del usuario especificado por ID
       tags: [Carts]
       parameters:
         - name: uid

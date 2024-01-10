@@ -37,7 +37,7 @@ cartsRoutes.get('/user/:uid/cart/:cid', async (req, res) => {
     }
 })
 
-cartsRoutes.post('addToCart/user/:uid/product/:pid', async (req, res) => {
+cartsRoutes.post('addtocart/user/:uid/product/:pid', async (req, res) => {
     try {
         const { pid, uid } = req.params;
 
