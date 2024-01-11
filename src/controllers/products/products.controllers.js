@@ -10,7 +10,7 @@ export const getAllProducts = async (req, res) => {
             limit: limitNumber,
             page: pageNumber,
             sort: {}
-        }
+        };
 
         if (sort) {
             if (sort === 'asc') {
@@ -20,13 +20,13 @@ export const getAllProducts = async (req, res) => {
             }
         } else {
             options.sort = { _id: 1 }
-        }
+        };
 
         const filtro = {};
 
         if (category) {
             filtro.category = category;
-        }
+        };
 
         const result = await productsService.getAllProducts(filtro, options);
 
@@ -35,10 +35,10 @@ export const getAllProducts = async (req, res) => {
 
         if (sort) {
             URLparams += '&sort=' + sort
-        }
+        };
         if (category) {
             URLparams += '&category=' + category
-        }
+        };
 
         res.json({
             status: 'success',
@@ -50,7 +50,7 @@ export const getAllProducts = async (req, res) => {
         res.status(500).json({
             status: 'error',
             message: 'Error en la busqueda'
-        })
+        });
     };
 };
 
@@ -66,14 +66,14 @@ export const createProduct = async (req, res) => {
 
         if (result.status === 'Error') return res.status(401).json({ status: 'error', message: 'Error al agregar producto' })
 
-        res.json({ status: 'Success', result })
+        res.status(201).json({ status: 'Success', payload: result });
 
     } catch (error) {
         res.status(500).json({
             status: 'Error',
             message: 'En el servidor agregando producto',
             error: error.message
-        })
+        });
     }
 };
 
@@ -82,14 +82,14 @@ export const getProductByID = async (req, res) => {
         const { pid } = req.params;
         const result = await productsService.getProductByID(pid);
         if (result.status === 'Error') return res.status(result.code).json({ status: result.status, message: result.message });
-        res.status(200).json({ status: 'Success', result });
+        res.status(200).json({ status: 'Success', payload: result });
     } catch (error) {
         res.status(500).json({
             status: 'Error',
             message: 'En el servidor al buscar producto',
             error: error.message
         })
-    }
+    };
 };
 
 export const deleteProduct = async (req, res) => {
@@ -99,7 +99,7 @@ export const deleteProduct = async (req, res) => {
         if (!pid || !uid) return res.status(400).json({ status: 'Error', message: 'ID del usuario y producto requerido' });
         const result = await productsService.deleteProduct(pid, uid);
         if (result && result.status && result.code) return res.status(result.code).json({ status: result.status, message: result.message });
-        res.status(200).json({ status: 'Success', message: 'Producto eliminado con exito' });
+        res.status(200).json({ status: 'Success', message: 'Producto eliminado con exito', payload: result });
     } catch (error) {
         req.logger.error(error);
         res.status(500).json({
