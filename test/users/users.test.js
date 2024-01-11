@@ -49,9 +49,7 @@ describe('Testing CoderHoue BackEnd', () => {
         it('Cambio de rol de usuario, EP PUT /user-role/premium/:uid', async () => {
             const uid = '659ee640d36e625d38222bc9';
             const role = 'admin';
-
-            const { statusCode, ok, _body } = await requester.put(`${baseUrl}user-role/premium/${uid}`).send(role);
-            console.log({ statusCode, ok, _body })
+            const { statusCode, ok, _body } = await requester.put(`${baseUrl}user-role/premium/${uid}`).send({ role });
             assert.ok(ok, 'Solicitud exitosa');
             assert.equal(statusCode, 200, 'Estatus code correcto');
         });

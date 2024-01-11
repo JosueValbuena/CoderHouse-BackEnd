@@ -98,6 +98,8 @@ export default class User {
 
     userRolePremium = async (uid, role) => {
         try {
+            const user = await usersModel.findById({ _id: uid });
+            if(!user) return {status: 'Error', message: 'Usuario no encontrado'};
             const result = await usersModel.updateOne({ _id: uid }, { $set: { role } });
             return result;
         } catch (error) {

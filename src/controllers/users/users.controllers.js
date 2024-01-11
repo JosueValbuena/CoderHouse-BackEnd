@@ -157,6 +157,7 @@ export const userRolePremium = async (req, res) => {
         const { role } = req.body;
         if (!uid || !role) return res.status(400).json({ status: 'Error', message: 'Datos incompletos' });
         const result = await usersService.userRolePremium(uid, role);
+        if (result.status === 'Error') return res.status(404).json({ status: result.status, message: result.message });
         res.status(200).json({ status: 'Success', message: 'Rol de usuario cambiado con exito', result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
