@@ -1,41 +1,14 @@
 import { Router } from "express";
 import cartsModels from "../../models/carts/carts.models.js";
 import productsModel from "../../models/products/products.models.js";
+import { getAllCarts, getUserCart } from "../../controllers/carts/carts.controllers.js";
 
 const cartsRoutes = Router();
 
 //651cc4cff298139950c36fbf user ObjId Example
 
-cartsRoutes.get('/', async (req, res) => {
-    try {
-        const result = await cartsModels.find();
-        res.send({
-            status: 'success',
-            payload: result
-        })
-    } catch (error) {
-        res.status(500).send({
-            status: 'error',
-            message: 'Error en la busqueda'
-        })
-    }
-})
-
-cartsRoutes.get('/user/:uid/cart/:cid', async (req, res) => {
-    try {
-        const { cid } = req.params;
-        const result = await cartsModels.find({ _id: cid });
-        res.send({
-            status: 'success',
-            payload: result
-        })
-    } catch (error) {
-        res.status(500).send({
-            status: 'error',
-            message: 'Error en la busqueda'
-        })
-    }
-})
+cartsRoutes.get('/allcarts', getAllCarts);
+cartsRoutes.get('/usercart/:uid', getUserCart);
 
 cartsRoutes.post('addtocart/user/:uid/product/:pid', async (req, res) => {
     try {
