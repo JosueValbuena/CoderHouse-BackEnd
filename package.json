@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/app.js",
+    "test:all": "mocha test/**/*.test.js",
     "test:user": "mocha test/users/users.test.js",
     "test:products": "mocha test/products/products.test.js",
     "test:cart": "mocha test/cart/cart.test.js"
