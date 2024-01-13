@@ -24,7 +24,7 @@ components:
         user: ObjectId("5f8a18a6716f8b41b43c022b")
 
 paths:
-  /api/carts/user/{uid}/cart/{cid}:
+  /api/carts/usercart/{uid}:
     get:
       summary: Obtener el carrito del usuario especificado por ID
       tags: [Carts]
@@ -33,12 +33,6 @@ paths:
           in: path
           required: true
           description: ID del usuario asociado al carrito
-          schema:
-            type: String
-        - name: cid
-          in: path
-          required: true
-          description: ID del carrito
           schema:
             type: String
       responses:
