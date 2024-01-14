@@ -44,9 +44,10 @@ export default class User {
     loginUser = async (email, password) => {
         try {
             const result = await usersModel.findOne({ email: email });
-
             if (!result) return { status: 'Error', message: 'Error al verificar usuario' };
             if (!isValidPassword(result, password)) return { status: 'Error', message: 'Contrasenha del usuario incorrecta' };
+            const updateUserConnection = await usersModel.updateOne({ _id: result._id }, { $set: { last_connection: Date.now() } });
+            updateUserConnection ? this.logger.info('Ultima conexion actualizada') : this.logger.error('No se actualizo la ultima conexion');
             this.logger.info('Autenticado')
             return result
         } catch (error) {
@@ -99,7 +100,7 @@ export default class User {
     userRolePremium = async (uid, role) => {
         try {
             const user = await usersModel.findById({ _id: uid });
-            if(!user) return {status: 'Error', message: 'Usuario no encontrado'};
+            if (!user) return { status: 'Error', message: 'Usuario no encontrado' };
             const result = await usersModel.updateOne({ _id: uid }, { $set: { role } });
             return result;
         } catch (error) {

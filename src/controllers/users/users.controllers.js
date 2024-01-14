@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { usersService } from "../../repository/index.repository.js";
 import CurrentUser from "../../DTOs/users/users.dto.js";
+import UserLogin from "../../DTOs/users/user_loggin.dto.js";
 import nodeMailer from 'nodemailer';
 import { createhash, isValidPassword } from '../../config/passport.config.js';
 import { isValidObjectId } from 'mongoose';
@@ -41,8 +42,8 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
 
         if (!token) return res.json({ status: 'Error', message: 'Error al firmar el token' });
-
-        res.status(200).json({ token, name: result.first_name, role: result.role, id: result._id });
+        let user = new UserLogin(result);
+        res.status(200).json({ status: 'Success', message: 'Usuario logueado con exito', token, payload: user });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
