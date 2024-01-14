@@ -12,7 +12,13 @@ const usersSchema = new mongoose.Schema({
     last_connection: {
         type: Date,
         default: Date.now
-    }
+    },
+    documents: [
+        {
+            name: String,
+            reference: String
+        }
+    ]
 });
 
 const usersModel = mongoose.model(usersCollection, usersSchema);
