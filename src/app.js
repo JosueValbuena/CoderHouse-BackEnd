@@ -8,11 +8,13 @@ import { loggerMiddleware } from "./middlewares/index.middlewares.js";
 import { logger } from "./utils/index.logger.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUIExpress from 'swagger-ui-express';
+import multer from "multer";
+import path from 'path';
+import fs from 'fs';
 
 //configs
 dotenv.config();
 const port = process.env.PORT || 3001;
-const app = express();
 
 //mongo
 const mongoEnviroment = async () => {
@@ -47,6 +49,8 @@ try {
 } catch (error) {
     logger.error('Error al generar las especificaciones Swagger: ', error);
 };
+// app
+const app = express();
 
 //middlewares
 app.use(express.json());
@@ -58,12 +62,19 @@ app.use(cors({
     credentials: true
 }));
 app.use(passport.initialize());
-
 app.use(loggerMiddleware);
 app.use('/', router);
 app.use('/api/docs', swaggerUIExpress.serve, swaggerUIExpress.setup(swaggerSpecs));
+//app.post('/user/:uid/documents/:type', upload.array('file', 5), postFile);
 app.use((req, res, next) => {
-    res.status(404).json({ error: 'Not Found' });
+    res.status(404).json({ status: 'Error', message: 'Not Found' });
+});
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        res.status(400).json({ status: 'Error', message: 'Error al subir el archivo', error: err.message });
+    } else {
+        next(err);
+    }
 });
 
 app.listen(port, () => {

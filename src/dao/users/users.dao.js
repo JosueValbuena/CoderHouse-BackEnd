@@ -106,6 +106,25 @@ export default class User {
         } catch (error) {
             this.logger.error('Error al cambiar el rol a premium', error);
             throw new Error('Error al cambiar el rol a premium');
+        };
+    };
+
+    postFile = async (uid, fileName, fileReference) => {
+        try {
+            const fileObject = {
+                name: fileName.toString(),
+                reference: fileReference.toString()
+            };
+
+            const result = await usersModel.findByIdAndUpdate(
+                { _id: uid },
+                { $push: { documents: fileObject } },
+                { new: true }
+            );
+            return result;
+        } catch (error) {
+            this.logger.error('Error al subir informacion del archivo', error);
+            throw new Error('Error al subir informacion del archivo');
         }
     };
 };

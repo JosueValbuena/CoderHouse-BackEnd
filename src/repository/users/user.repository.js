@@ -42,4 +42,9 @@ export default class UsersRepository {
         let result = await this.dao.userRolePremium(uid, role);
         return result;
     };
+
+    postFile = async (uid, fileName, fileReference) => {
+        let result = await this.dao.postFile(uid, fileName, fileReference);
+        return result;
+    };
 };

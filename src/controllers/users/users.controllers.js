@@ -149,7 +149,7 @@ export const passwordRecovery = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
-    }
+    };
 };
 
 export const userRolePremium = async (req, res) => {
@@ -162,5 +162,20 @@ export const userRolePremium = async (req, res) => {
         res.status(200).json({ status: 'Success', message: 'Rol de usuario cambiado con exito', result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
-    }
+    };
+};
+
+export const postFile = async (req, res) => {
+    try {
+        if (!req.files) return res.status(400).json({ status: 'Error', message: 'No hay archivo adjunto' });
+        const { uid, type } = req.params;
+        const fileReference = req.files[0].path;
+        if (!uid || !type) return res.status(400).json({ satus: 'Error', message: 'Parametros incompletos' });
+        const fileName = type;
+        const result = await usersService.postFile(uid, fileName, fileReference);
+        console.log(fileName)
+        res.status(201).json({ status: 'Success', message: 'Archivo cargado con exito', payload: result });
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
+    };
 };

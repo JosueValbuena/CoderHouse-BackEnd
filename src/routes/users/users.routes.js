@@ -1,8 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { getAllUsers, getCurrentUser, getUserByID, loginUser, passwordForgot, passwordRecovery, passwordRecoveryToken, registerUser, userRolePremium } from "../../controllers/users/users.controllers.js";
+import { getAllUsers, getCurrentUser, getUserByID, loginUser, passwordForgot, passwordRecovery, passwordRecoveryToken, postFile, registerUser, userRolePremium } from "../../controllers/users/users.controllers.js";
 import { accesPrivacyMiddleware } from "../../middlewares/index.middlewares.js";
-
+import { upload } from "../../config/multer.config.js";
 
 const usersRoutes = Router();
 
@@ -23,5 +23,7 @@ usersRoutes.get('/password-recovery/:token', passwordRecoveryToken);
 usersRoutes.put('/password-recovery', passwordRecovery);
 
 usersRoutes.put('/user-role/premium/:uid', userRolePremium);
+
+usersRoutes.post('/user/:uid/documents/:type', upload.array('file', 5), postFile);
 
 export default usersRoutes;
