@@ -173,7 +173,6 @@ export const postFile = async (req, res) => {
         if (!uid || !type) return res.status(400).json({ satus: 'Error', message: 'Parametros incompletos' });
         const fileName = type;
         const result = await usersService.postFile(uid, fileName, fileReference);
-        console.log(fileName)
         res.status(201).json({ status: 'Success', message: 'Archivo cargado con exito', payload: result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
