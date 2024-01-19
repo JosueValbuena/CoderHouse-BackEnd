@@ -1,19 +1,22 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { usersService } from "../../repository/index.repository.js";
-import CurrentUser from "../../DTOs/users/users.dto.js";
+import CurrentUser from "../../DTOs/users/currentUser.dto.js";
 import UserLogin from "../../DTOs/users/user_loggin.dto.js";
 import nodeMailer from 'nodemailer';
 import { createhash, isValidPassword } from '../../config/passport.config.js';
 import { isValidObjectId } from 'mongoose';
+import AllUsers from '../../DTOs/users/allUsers.dto.js';
 
 dotenv.config();
 
 
 export const getAllUsers = async (req, res) => {
     try {
-        const result = await usersService.getAllUsers(req);
-        res.status(201).json({ status: 'Success', result });
+        const users = await usersService.getAllUsers(req);
+        const usersFilter = new AllUsers(users);
+        const result = usersFilter.getUsers();
+        res.status(200).json({ status: 'Success', payload: result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
     }
@@ -65,8 +68,8 @@ export const getUserByID = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
     try {
         const user = req.user;
-        let result = new CurrentUser(user);
-        res.status(200).json(result);
+        const result = new CurrentUser(user);
+        res.status(200).json({ status: 'Success', payload: result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message })
     }
