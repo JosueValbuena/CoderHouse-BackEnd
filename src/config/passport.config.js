@@ -3,6 +3,7 @@ import passport from 'passport';
 import { ExtractJwt, Strategy as JWTStrategy, Strategy } from 'passport-jwt';
 import dotenv from 'dotenv';
 import { usersService } from '../repository/index.repository.js';
+import CurrentUser from '../DTOs/users/currentUser.dto.js';
 dotenv.config();
 
 //encriptar contrasenha
@@ -23,7 +24,8 @@ passport.use('current', new JWTStrategy(jwtOptions, async (jwt_payload, done) =>
         const user = await usersService.getCurrentUser({ email: jwt_payload.email });
 
         if (!user) return done(null, false, { message: 'usuario no encontrado' });
-        console.log(user)
+        const result = new CurrentUser(user);
+        console.log(result)
         return done(null, user);
     } catch (error) {
         return done(error, false, { message: 'Error al buscar el usuario' })

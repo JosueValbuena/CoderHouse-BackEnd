@@ -181,3 +181,16 @@ export const postFile = async (req, res) => {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
     };
 };
+
+export const inactiveUsers = async (req, res) => {
+    try {
+        const users = await usersService.inactiveUsers();
+        if (!users) return res.status(404).json({ status: 'Error', message: 'No se encontraton usuarios' });
+        const result = users.filter(user =>
+            Date.now() - user.last_connection >= 5 * 86400000);
+        res.status(201).json({ status: 'Succes', message: 'usuarios inactivos por mas de 5 dias', payload: result });
+        // El requerimiento de eliminar usuarios con mas de 2 dias sin conexion lo he sustituido solo por traer su informacion
+    } catch (error) {
+        res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
+    }
+}

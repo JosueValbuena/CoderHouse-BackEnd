@@ -127,4 +127,14 @@ export default class User {
             throw new Error('Error al subir informacion del archivo');
         }
     };
+
+    inactiveUsers = async () => {
+        try {
+            const result = await usersModel.find();
+            return result
+        } catch (error) {
+            this.logger.error('Error en servidor al consultar usuarios inactivos', error);
+            throw new Error('Error en servidor al consultar usuarios inactivos');
+        };
+    };
 };

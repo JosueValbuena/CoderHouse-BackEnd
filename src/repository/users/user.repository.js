@@ -47,4 +47,9 @@ export default class UsersRepository {
         let result = await this.dao.postFile(uid, fileName, fileReference);
         return result;
     };
+
+    inactiveUsers = async () => {
+        const result = await this.dao.inactiveUsers();
+        return result;
+    };
 };
