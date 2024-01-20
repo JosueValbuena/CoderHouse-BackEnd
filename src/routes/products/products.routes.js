@@ -9,6 +9,6 @@ productsRoutes.get('/:pid', getProductByID);
 
 productsRoutes.post('/create', createProduct);
 
-productsRoutes.delete('/delete/:pid', deleteProduct);
+productsRoutes.delete('/delete/:pid/user/:uid', deleteProduct);
 
 export default productsRoutes;

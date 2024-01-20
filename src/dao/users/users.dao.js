@@ -161,6 +161,11 @@ export default class User {
                 status: 'Error',
                 message: 'no se pudo editar el usuario'
             };
+            if(result.modifiedCount === 0) return {
+                code: 400,
+                status: 'Error',
+                message:  'los datos a agregar deben ser diferentes a los actuales'
+            };
             return result;
         } catch (error) {
             this.logger.error('Error en servidor al editar usuario', error);

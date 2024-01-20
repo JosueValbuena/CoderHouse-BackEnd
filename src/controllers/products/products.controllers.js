@@ -1,4 +1,5 @@
 import { productsService } from "../../repository/index.repository.js";
+import nodeMailer from 'nodemailer';
 
 export const getAllProducts = async (req, res) => {
     try {
@@ -94,12 +95,47 @@ export const getProductByID = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     try {
-        const { pid } = req.params;
-        const { uid } = req.body;
-        if (!pid || !uid) return res.status(400).json({ status: 'Error', message: 'ID del usuario y producto requerido' });
+        const { pid, uid } = req.params;
+
+        if (!pid || !uid) return res.status(400).json({
+            status: 'Error',
+            message: 'ID del usuario y producto requerido'
+        });
+
         const result = await productsService.deleteProduct(pid, uid);
-        if (result && result.status && result.code) return res.status(result.code).json({ status: result.status, message: result.message });
-        res.status(200).json({ status: 'Success', message: 'Producto eliminado con exito', payload: result });
+
+        if (result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+
+        if (result.userRole === 'premium') {
+            const transporter = nodeMailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: process.env.MAIL,
+                    pass: process.env.PASS
+                }
+            });
+
+            const mailOptions = {
+                from: 'joshvlbn@gmail.com',
+                to: result.userEmail,
+                subject: 'Aviso de producto eliminado',
+                text: `Le informamos que su producto ${result.productTitle} ha sido eliminado`
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    req.logger.error(error);
+                    return res.status(500).send('Error al enviar correo de recuperacion');
+                };
+                req.logger.info('Correo informativo enviado correctamente')
+                res.status(200).json({ status: 'Succes', message: 'Correo de recuperacion enviado correctamente' });
+            });
+        }
+        req.logger.info('Producto eliminado correctamente');
+        res.status(204).end();
     } catch (error) {
         req.logger.error(error);
         res.status(500).json({

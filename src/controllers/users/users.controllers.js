@@ -188,7 +188,7 @@ export const inactiveUsers = async (req, res) => {
         if (!users) return res.status(404).json({ status: 'Error', message: 'No se encontraton usuarios' });
         const result = users.filter(user =>
             Date.now() - user.last_connection >= 5 * 86400000);
-        res.status(201).json({ status: 'Succes', message: 'usuarios inactivos por mas de 5 dias', payload: result });
+        res.status(200).json({ status: 'Succes', message: 'usuarios inactivos por mas de 5 dias', payload: result });
         // El requerimiento de eliminar usuarios con mas de 2 dias sin conexion lo he sustituido solo por traer su informacion
     } catch (error) {
         res.status(500).json({
@@ -209,11 +209,8 @@ export const deleteUserById = async (req, res) => {
             status: result.status,
             message: result.message
         });
-        res.status(201).json({
-            status: 'Success',
-            message: 'Usuario eliminado con exito',
-            payload: result
-        })
+        req.logger.info('Usuario eliminado con exito');
+        res.status(204).end();
     } catch (error) {
         res.status(500).json({
             status: 'Error',
@@ -252,7 +249,7 @@ export const editUserByID = async (req, res) => {
             message: result.message
         });
 
-        res.status(201).json({
+        res.status(200).json({
             status: 'Success',
             message: 'Usuario editado con exito',
             payload: result
