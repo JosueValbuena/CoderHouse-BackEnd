@@ -52,4 +52,14 @@ export default class UsersRepository {
         const result = await this.dao.inactiveUsers();
         return result;
     };
+
+    deleteUserById = async (id) => {
+        const result = await this.dao.deleteUserById(id);
+        return result;
+    };
+
+    editUserByID = async (id, newInfoUser) => {
+        const result = await this.dao.editUserByID(id, newInfoUser);
+        return result;
+    };
 };

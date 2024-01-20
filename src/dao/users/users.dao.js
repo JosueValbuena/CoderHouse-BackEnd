@@ -137,4 +137,34 @@ export default class User {
             throw new Error('Error en servidor al consultar usuarios inactivos');
         };
     };
+
+    deleteUserById = async (id) => {
+        try {
+            const result = await usersModel.deleteOne({ _id: id });
+            if (result.deletedCount === 0) return {
+                code: 404,
+                status: 'Error',
+                message: 'No se encontro usuario con el ID especificado'
+            };
+            return result;
+        } catch (error) {
+            this.logger.error('Error en servidor al consultar usuarios inactivos', error);
+            throw new Error('Error en servidor al consultar usuarios inactivos');
+        };
+    };
+
+    editUserByID = async (id, newInfoUser) => {
+        try {
+            const result = await usersModel.updateOne({ _id: id }, { $set: newInfoUser });
+            if (!result.acknowledged) return {
+                code: 400,
+                status: 'Error',
+                message: 'no se pudo editar el usuario'
+            };
+            return result;
+        } catch (error) {
+            this.logger.error('Error en servidor al editar usuario', error);
+            throw new Error('Error en servidor al editar usuario');
+        };
+    };
 };

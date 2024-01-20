@@ -191,6 +191,77 @@ export const inactiveUsers = async (req, res) => {
         res.status(201).json({ status: 'Succes', message: 'usuarios inactivos por mas de 5 dias', payload: result });
         // El requerimiento de eliminar usuarios con mas de 2 dias sin conexion lo he sustituido solo por traer su informacion
     } catch (error) {
-        res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
-    }
-}
+        res.status(500).json({
+            status: 'Error',
+            message: 'Error en el servidor al buscar usuarios inactivos',
+            error: error.message
+        });
+    };
+};
+
+export const deleteUserById = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const validId = isValidObjectId(uid);
+        if (!validId) return res.status(400).json({ status: 'Error', message: 'ID de usuario no valido' });
+        const result = await usersService.deleteUserById(uid);
+        if (result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+        res.status(201).json({
+            status: 'Success',
+            message: 'Usuario eliminado con exito',
+            payload: result
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: 'Error',
+            message: 'Error en el servidor al eliminar usuario por ID',
+            error: error.message
+        });
+    };
+};
+
+export const editUserByID = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { first_name, last_name, email, role } = req.body;
+        const newInfoUser = {
+            first_name,
+            last_name,
+            email,
+            role
+        };
+        const validId = isValidObjectId(uid);
+
+        if (!validId) return res.status(400).json({
+            status: 'Error',
+            message: 'El ID del usuario no es valido'
+        });
+
+        if (!first_name || !last_name || !email || !role) return res.status(400).json({
+            status: 'Error',
+            message: 'Falta informacion del usuario en la consulta'
+        });
+
+        const result = await usersService.editUserByID(uid, newInfoUser);
+
+        if (result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+
+        res.status(201).json({
+            status: 'Success',
+            message: 'Usuario editado con exito',
+            payload: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'Error',
+            message: 'Error en el servidor al editar usuario por ID',
+            error: error.message
+        });
+    };
+};
