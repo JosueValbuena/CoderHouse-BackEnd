@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import { productsService } from "../../repository/index.repository.js";
 import nodeMailer from 'nodemailer';
 
@@ -55,6 +56,49 @@ export const getAllProducts = async (req, res) => {
     };
 };
 
+export const getAllProductsFromUser = async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const validId = isValidObjectId(uid);
+        if (!validId) return res.status(400).json({
+            status: 'Error',
+            message: 'El ID del usuario no es valido'
+        });
+        const result = await productsService.getAllProductsFromUser(uid);
+        if (result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+
+        res.status(200).json({
+            status: 'Success',
+            message: 'consulta realizada con exito',
+            payload: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Error en la busqueda',
+            error: error.message
+        });
+    };
+};
+
+export const getProductByID = async (req, res) => {
+    try {
+        const { pid } = req.params;
+        const result = await productsService.getProductByID(pid);
+        if (result.status === 'Error') return res.status(result.code).json({ status: result.status, message: result.message });
+        res.status(200).json({ status: 'Success', payload: result });
+    } catch (error) {
+        res.status(500).json({
+            status: 'Error',
+            message: 'En el servidor al buscar producto',
+            error: error.message
+        })
+    };
+};
+
 export const createProduct = async (req, res) => {
     try {
         const { title, description, code, price, stock, category, user } = req.body;
@@ -78,18 +122,49 @@ export const createProduct = async (req, res) => {
     }
 };
 
-export const getProductByID = async (req, res) => {
+export const editProduct = async (req, res) => {
     try {
-        const { pid } = req.params;
-        const result = await productsService.getProductByID(pid);
-        if (result.status === 'Error') return res.status(result.code).json({ status: result.status, message: result.message });
-        res.status(200).json({ status: 'Success', payload: result });
+        const { pid, uid } = req.params;
+        const { title,
+            description,
+            code,
+            price,
+            stock,
+            category
+        } = req.body;
+
+        const validPid = isValidObjectId(pid);
+        const validUid = isValidObjectId(uid);
+
+        if (!validPid || !validUid) return res.status(400).json({
+            status: 'Error',
+            message: 'Los datos enviados no son validos'
+        });
+
+        const newProduct = {
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category
+        };
+        const result = await productsService.editProduct(pid, uid, newProduct);
+        if (result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+        res.status(201).json({
+            status: 'Success',
+            message: 'Producto modificado con exito',
+            payload: result
+        });
     } catch (error) {
         res.status(500).json({
             status: 'Error',
-            message: 'En el servidor al buscar producto',
+            message: 'Error en el servidor al editar producto',
             error: error.message
-        })
+        });
     };
 };
 

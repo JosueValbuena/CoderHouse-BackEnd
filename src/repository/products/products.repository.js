@@ -8,6 +8,11 @@ export default class ProductsRepository {
         return result;
     };
 
+    getAllProductsFromUser = async (uid) => {
+        const result = await this.dao.getAllProductsFromUser(uid);
+        return result
+    };
+
     createProduct = async (title, description, code, price, stock, category, user) => {
         let result = await this.dao.createProduct(title, description, code, price, stock, category, user);
         return result
@@ -15,6 +20,11 @@ export default class ProductsRepository {
 
     getProductByID = async (pid) => {
         let result = await this.dao.getProductByID(pid);
+        return result;
+    };
+
+    editProduct = async (pid, uid, newProduct) => {
+        const result = await this.dao.editProduct(pid, uid, newProduct);
         return result;
     };
 

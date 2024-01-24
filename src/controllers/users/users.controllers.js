@@ -210,7 +210,7 @@ export const deleteUserById = async (req, res) => {
             message: result.message
         });
         req.logger.info('Usuario eliminado con exito');
-        res.status(204).end();
+        res.status(204).json({ status: 'Success' });
     } catch (error) {
         res.status(500).json({
             status: 'Error',

@@ -13,8 +13,22 @@ export default class Product {
             if (!result) return { status: 'Error', message: 'Error al buscar productos' };
             return result;
         } catch (error) {
-            throw new Error(' Error al buscar productos' + error)
+            throw new Error('Error al buscar productos' + error)
         }
+    };
+
+    getAllProductsFromUser = async (uid) => {
+        try {
+            const result = await productsModel.find({ user: uid });
+            if (!result || result.length <= -1) return {
+                code: 404,
+                status: 'Error',
+                message: 'No se encontraron productos con el ID del usuario'
+            };
+            return result;
+        } catch (error) {
+            throw new Error('Error al buscar productos por usuario', error.message);
+        };
     };
 
     getProductByID = async (id) => {
@@ -24,7 +38,7 @@ export default class Product {
             return result;
         } catch (error) {
             throw new Error(' Error al buscar productos' + error)
-        }
+        };
     };
 
     createProduct = async (title, description, code, price, stock, category, user) => {
@@ -33,8 +47,33 @@ export default class Product {
             if (!result) return { status: 'Error', message: 'No se pudo agregar producto ' };
             return result;
         } catch (error) {
-            throw new Error(' Error al agregar producto')
-        }
+            throw new Error('Error al agregar producto', error.message);
+        };
+    };
+
+    editProduct = async (pid, uid, newProduct) => {
+        try {
+            const product = await productsModel.findById({ _id: pid });
+            const result = await productsModel.updateOne({ _id: pid }, { $set: newProduct });
+            if (product.user.toString() !== uid) return {
+                code: 400,
+                status: 'Error',
+                message: 'Los datos enviados no coinciden'
+            };
+            if (result.matchedCount === 0) return {
+                code: 400,
+                status: 'Error',
+                message: 'No se encontro producto con este ID'
+            };
+            if (result.modifiedCount === 0) return {
+                code: 404,
+                status: 'Error',
+                message: 'Los datos nuevos del producto no pueden ser iguales a los actuales'
+            };
+            return result;
+        } catch (error) {
+            throw new Error('Error al editar producto', error.message);
+        };
     };
 
     deleteProduct = async (pid, uid) => {
