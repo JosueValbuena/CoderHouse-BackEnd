@@ -60,7 +60,7 @@ export default class Product {
                 status: 'Error',
                 message: 'Los datos enviados no coinciden'
             };
-            if (result.matchedCount === 0) return {
+            if (result.matchedCount === 0 || !result.acknowledged) return {
                 code: 400,
                 status: 'Error',
                 message: 'No se encontro producto con este ID'
