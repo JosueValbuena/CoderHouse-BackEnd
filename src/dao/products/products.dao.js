@@ -51,7 +51,7 @@ export default class Product {
         };
     };
 
-    editProduct = async (pid, uid, newProduct) => {
+    editProductByUserOwner = async (pid, uid, newProduct) => {
         try {
             const product = await productsModel.findById({ _id: pid });
             const result = await productsModel.updateOne({ _id: pid }, { $set: newProduct });
@@ -76,7 +76,30 @@ export default class Product {
         };
     };
 
-    deleteProduct = async (pid, uid) => {
+    editProductByAdmin = async (pid, newProduct) => {
+        try {
+            const result = await productsModel.updateOne({ _id: pid }, { $set: newProduct });
+            if (result.matchedCount === 0) {
+                return {
+                    code: 401,
+                    status: 'Error',
+                    message: 'Producto no encontrado'
+                };
+            };
+            if (!result.acknowledged || result.modifiedCount === 0) {
+                return {
+                    code: 400,
+                    status: 'Error',
+                    message: 'Los datos nuevos no pueden ser igual a los actuales'
+                };
+            };
+            return result;
+        } catch (error) {
+            throw new Error('Error al editar producto', error.message);
+        };
+    };
+
+    deleteProductByUserOwner = async (pid, uid) => {
         try {
             const user = await usersModel.findById({ _id: uid });
             const product = await productsModel.findByIdAndDelete({ _id: pid });

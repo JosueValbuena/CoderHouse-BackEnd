@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createProduct, deleteProduct, editProduct, getAllProducts, getAllProductsFromUser, getProductByID } from "../../controllers/products/products.controllers.js";
+import { createProduct, deleteProductByUserOwner, editProductByAdmin, editProductByUserOwner, getAllProducts, getAllProductsFromUser, getProductByID } from "../../controllers/products/products.controllers.js";
 
 const productsRoutes = Router();
 
@@ -11,8 +11,10 @@ productsRoutes.get('/product/:pid', getProductByID);
 
 productsRoutes.post('/create', createProduct);
 
-productsRoutes.put('/product/:pid/user/:uid', editProduct);
+productsRoutes.put('/product/:pid/user/:uid', editProductByUserOwner);
 
-productsRoutes.delete('/delete/:pid/user/:uid', deleteProduct);
+productsRoutes.put('/product/:pid/useradmin', editProductByAdmin);
+
+productsRoutes.delete('/delete/:pid/user/:uid', deleteProductByUserOwner);
 
 export default productsRoutes;

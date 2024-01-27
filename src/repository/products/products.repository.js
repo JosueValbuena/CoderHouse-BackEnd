@@ -23,13 +23,18 @@ export default class ProductsRepository {
         return result;
     };
 
-    editProduct = async (pid, uid, newProduct) => {
-        const result = await this.dao.editProduct(pid, uid, newProduct);
+    editProductByUserOwner = async (pid, uid, newProduct) => {
+        const result = await this.dao.editProductByUserOwner(pid, uid, newProduct);
         return result;
     };
 
-    deleteProduct = async (pid, uid) => {
-        let result = await this.dao.deleteProduct(pid, uid);
+    editProductByAdmin = async (pid, newProduct) => {
+      const result = await this.dao.editProductByAdmin(pid, newProduct);
+      return result;
+    };
+
+    deleteProductByUserOwner = async (pid, uid) => {
+        let result = await this.dao.deleteProductByUserOwner(pid, uid);
         return result;
     };
 };

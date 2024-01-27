@@ -5,7 +5,7 @@ import nodeMailer from 'nodemailer';
 export const getAllProducts = async (req, res) => {
     try {
         const { limit, page, sort, category } = req.query;
-        const limitNumber = parseInt(limit) || 10;
+        const limitNumber = parseInt(limit) || 12;
         const pageNumber = parseInt(page) || 1;
 
         const options = {
@@ -32,7 +32,7 @@ export const getAllProducts = async (req, res) => {
 
         const result = await productsService.getAllProducts(filtro, options);
 
-        const baseURL = 'http://localhost:3001/api/products';
+        const baseURL = 'http://localhost:3001/api/products/all';
         let URLparams = '?';
 
         if (sort) {
@@ -122,7 +122,7 @@ export const createProduct = async (req, res) => {
     }
 };
 
-export const editProduct = async (req, res) => {
+export const editProductByUserOwner = async (req, res) => {
     try {
         const { pid, uid } = req.params;
         const { title,
@@ -149,7 +149,8 @@ export const editProduct = async (req, res) => {
             stock,
             category
         };
-        const result = await productsService.editProduct(pid, uid, newProduct);
+
+        const result = await productsService.editProductByUserOwner(pid, uid, newProduct);
         if (result.status === 'Error') return res.status(result.code).json({
             status: result.status,
             message: result.message
@@ -168,7 +169,55 @@ export const editProduct = async (req, res) => {
     };
 };
 
-export const deleteProduct = async (req, res) => {
+export const editProductByAdmin = async (req, res) => {
+    try {
+        const { pid } = req.params;
+        const isValidtId = isValidObjectId(pid);
+        if (!isValidtId) return res.status(400).json({
+            status: 'Error',
+            message: 'El ID no es correcto'
+        });
+
+        const {
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category
+        } = req.body;
+
+        const newProduct = {
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category
+        };
+
+        const result = await productsService.editProductByAdmin(pid, newProduct);
+
+        if (result.status && result.status === 'Error') return res.status(result.code).json({
+            status: result.status,
+            message: result.message
+        });
+
+        res.status(201).json({
+            status: 'Success',
+            message: 'Producto modificado con exito',
+            payload: result
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'Error',
+            message: 'Error en el servidor al editar producto',
+            error: error.message
+        });
+    };
+};
+
+export const deleteProductByUserOwner = async (req, res) => {
     try {
         const { pid, uid } = req.params;
 
