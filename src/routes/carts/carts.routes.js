@@ -5,12 +5,10 @@ import { getAllCarts, getUserCart } from "../../controllers/carts/carts.controll
 
 const cartsRoutes = Router();
 
-//651cc4cff298139950c36fbf user ObjId Example
-
 cartsRoutes.get('/allcarts', getAllCarts);
 cartsRoutes.get('/usercart/:uid', getUserCart);
 
-cartsRoutes.post('addtocart/user/:uid/product/:pid', async (req, res) => {
+cartsRoutes.post('/addtocart/user/:uid/product/:pid', async (req, res) => {
     try {
         const { pid, uid } = req.params;
 
@@ -23,21 +21,26 @@ cartsRoutes.post('addtocart/user/:uid/product/:pid', async (req, res) => {
             });
         };
 
-        const product = await cartsModels.findOne({ 'products.product': pid });
-
+        const product = await cartsModels.findOne({ user: uid, "products.product": pid });
+        console.log(product);
         if (product) {
 
-            await cartsModels.updateOne({ 'products.product': pid },
-                { $inc: { 'products.$.qty': 1 } })
+            await cartsModels.updateOne({
+                user: uid,
+                "products.product": pid
+            },
+                {
+                    $inc: { 'products.$.qty': 1 }
+                });
 
-            res.send({
+            return res.send({
                 result: 'success',
                 message: 'Cantidad de producto agregada'
-            })
-            return
-        }
+            });
+        };
+        console.log(product)
 
-        const newProduct = await productsModel.findById(pid);
+        const newProduct = await productsModel.findById({ _id: pid });
 
         if (!newProduct) {
             res.send({
