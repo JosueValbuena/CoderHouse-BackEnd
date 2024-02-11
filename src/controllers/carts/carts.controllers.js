@@ -17,8 +17,8 @@ export const getUserCart = async (req, res) => {
         const validId = isValidObjectId(uid);
         if (!validId) return res.status(401).json({ status: 'Error', message: 'ID de usuario no valido' });
         const result = await cartsService.getUserCart(uid);
-        if (result.status === 'Error') return res.status(404).json({ status: result.status, message: result.message });
-        res.status(200).json({ status: 'Success', message: 'Carrito de usuario encontrato correctamente', payload: result });
+        if (result.status === 'Error') return res.status(result.code).json({ status: result.status, message: result.message });
+        res.status(200).json({ status: 'Success', message: 'Carrito de usuario consultado correctamente', payload: result });
     } catch (error) {
         res.status(500).json({ status: 'Error', message: 'Error en el servidor', error: error.message });
     };

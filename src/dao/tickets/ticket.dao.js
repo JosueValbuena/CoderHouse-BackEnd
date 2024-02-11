@@ -4,9 +4,10 @@ import ticketModels from "../../models/ticket/ticket.model.js";
 
 export default class Ticket {
 
-    getTicket = async (id) => {
+    getTicket = async (phid, uid) => {
         try {
-            let result = await ticketModels.find({ _id: id });
+            let result = await ticketModels.find({ _id: phid, user: uid })
+                .populate('products.product');
             if (!result) return { status: 'Error', message: 'El ticket no existe' };
             return result;
         } catch (error) {
@@ -22,7 +23,10 @@ export default class Ticket {
 
             cart.forEach((ele) => {
                 for (const producto of ele.products) {
-                    if (!producto.product.stock >= producto.qty) return { status: 'Error', message: 'No hay stock suficiente' };
+                    if (producto.product.stock < producto.qty) return {
+                        status: 'Error',
+                        message: 'No hay stock suficiente'
+                    };
                     products.push(producto);
                 };
             });
@@ -33,9 +37,8 @@ export default class Ticket {
                 products: products
             };
 
-            console.log({ newTicket });
-
             let result = await ticketModels.create(newTicket);
+            if (result._id) await cartsModels.deleteOne({ _id: cid });
             return result;
         } catch (error) {
             throw new Error(' Error al crear el ticket: ' + error.message);

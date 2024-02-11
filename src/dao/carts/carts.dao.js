@@ -12,14 +12,11 @@ export default class Cart {
 
     getUserCart = async (uid) => {
         const result = await cartsModels.find({ user: uid });
-        if (result.length < 1) return { status: 'Error', message: 'No se encontro ningun carrito con este ID de usuario' };
         return result;
     };
 
-    
-
     deleteUserCart = async (uid) => {
-        const result = await cartsModels.deleteOne({user: uid});
+        const result = await cartsModels.deleteOne({ user: uid });
         return result;
     };
 };

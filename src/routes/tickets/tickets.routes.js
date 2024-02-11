@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { createTicket } from "../../controllers/tickets/tickets.controllers.js";
+import { createTicket, getTicket } from "../../controllers/tickets/tickets.controllers.js";
 
 const ticketsRoutes = Router();
 
-ticketsRoutes.post('/:cid/purchase/:uid', createTicket);
+ticketsRoutes.get('/getticket/:phid/user/:uid', getTicket);
+
+ticketsRoutes.post('/createpurchase/cart/:cid/user/:uid', createTicket);
 
 export default ticketsRoutes;
